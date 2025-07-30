@@ -18,9 +18,9 @@ class KNN:
         self.y = np.array(y)
 
     def predict(self, X):
-        return [self.predict_single(x) for x in X]
+        return [self._predict_single(x) for x in X]
 
-    def predict_single(self, x):
+    def _predict_single(self, x):
         distances = []
         for i, x_train in enumerate(self.X):
             dist = distance(x, x_train)
