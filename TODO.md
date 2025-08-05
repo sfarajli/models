@@ -13,7 +13,7 @@
 
 ## Models
 
-### Supervised Models (`models/`)
+### Supervised Models (`predictors/`)
 - [x] Linear models
   - [x] Linear Regression
   - [x] Logistic Regression
