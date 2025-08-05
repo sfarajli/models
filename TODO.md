@@ -13,7 +13,7 @@
 
 ## Models
 
-### Supervised Models (`predictors/`)
+### Supervised Models (`prediction/`)
 - [x] Linear models
   - [x] Linear Regression
   - [x] Logistic Regression
@@ -170,3 +170,7 @@
 - [ ] Custom kernels for SVM or distances for KNN
 
 ---
+
+## Algorithms (`algorithms/;`)
+
+--- 
