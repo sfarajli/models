@@ -1,8 +1,7 @@
+import math
 import numpy as np
 from collections import Counter
 
-# TODO: check for min_samples_split
-# TODO: handle all the parameters
 # TODO: add regressor
 
 class Node:
@@ -25,13 +24,13 @@ class DecisionTreeClassifier:
         criterion             = "gini", # entropy
         splitter              = "best", # random
         max_depth             = None,
-        min_samples_split     = 2,               # FIXME: not implemented  # split
-        min_samples_leaf      = 1,               # FIXME: not implemented  # split
+        min_samples_split     = 2,
+        min_samples_leaf      = 1,
         max_features          = None,
         random_state          = None,
-        max_leaf_nodes        = None,            # FIXME: not implemented  # split
-        min_impurity_decrease = 0.0,             # FIXME: not implemented  # split
-        class_weight          = None             # FIXME: not implemented  # misc probably
+        max_leaf_nodes        = None,
+        min_impurity_decrease = 0.0,
+        class_weight          = None             # TODO: not implemented
     ):
         self.criterion             = criterion
         self.splitter              = splitter
@@ -44,6 +43,13 @@ class DecisionTreeClassifier:
         self.min_impurity_decrease = min_impurity_decrease
         self.class_weight          = class_weight
         self._root_node            = None
+        self._leaf_count           = 0
+
+        if isinstance(self.random_state, int):
+            self.random_state = np.random.RandomState(self.random_state)
+        else:
+            self.random_state = np.random.RandomState()
+
 
     def fit(self, X, y):
         self._root_node = self._build_tree(X, y, 0)
@@ -51,17 +57,27 @@ class DecisionTreeClassifier:
     def _build_tree(self, X, y, depth):
         node = Node()
 
-        if self._impurity(y) == 0 or (self.max_depth is not None and depth >= self.max_depth):
+        if self._impurity(y) == 0 or \
+                (self.max_depth is not None and depth >= self.max_depth) or \
+                len(y) < self.min_samples_split or \
+                # FIXME: doesn't work perfectly since leaf count can be one less than max leaf node
+                (self.max_leaf_nodes is not None and self._leaf_count + 1 > self.max_leaf_nodes):
             node.label = self._getlabel(y)
+            self._leaf_count += 1
             return node
 
-        feature_inx, threshold = self._best_split_params(X, y)
-        if feature_inx == None or threshold == None:
+        feature_inx, threshold, info_gain = self._best_split_params(X, y)
+        if feature_inx == None or threshold == None or info_gain <= self.min_impurity_decrease:
             node.label = self._getlabel(y)
+            self._leaf_count += 1
             return node
-
 
         X_right, X_left, y_right, y_left = self._split(X, y, feature_inx, threshold)
+
+        if len(y_left) < self.min_samples_leaf or len(y_right) < self.min_samples_leaf:
+            node.label = self._getlabel(y)
+            self._leaf_count += 1
+            return node
 
         node.threshold = threshold
         node.feature  = feature_inx
@@ -138,20 +154,20 @@ class DecisionTreeClassifier:
 
         # self.max_feature cannot be float
         if self.max_features == 'sqrt':
-            max_features = math.sqrt(n_features)
+            max_features = int(math.sqrt(n_features))
         elif self.max_features == 'log2':
-            max_features = np.log2(n_features)
+            max_features = int(np.log2(n_features))
         elif isinstance(self.max_features, int):
             max_features = self.max_features
         elif self.max_features is None:
             max_features = n_features
 
-        size = np.random.randint(1, max_features + 1)  # random size between 1 and max_features
-        feature_indices = np.random.choice(X.shape[1], size=size, replace=False)
+        size = self.random_state.randint(1, max_features + 1)  # random size between 1 and max_features
+        feature_indices = self.random_state.choice(X.shape[1], size=size, replace=False)
 
         if self.splitter == 'random':
             # Choose one index randomly but threshold is still the most optimal
-            feature_indices = [np.random.choice(feature_indices)]
+            feature_indices = [self.random_state.choice(feature_indices)]
 
         best_info_gain = -np.inf
         best_threshold = None
@@ -168,7 +184,7 @@ class DecisionTreeClassifier:
                     best_feature_inx = feature_inx
                     best_threshold = threshold
 
-        return best_feature_inx, best_threshold
+        return best_feature_inx, best_threshold, best_info_gain
 
     def predict(self, X):
         return [ self._predict(x, self._root_node) for x in X ]
