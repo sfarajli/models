@@ -1,0 +1,2 @@
+- [ ] Convert model input lists into numpy arrays and check for dimensions
+- [ ] Check for invalid class parameters
