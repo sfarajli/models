@@ -25,13 +25,13 @@ class DecisionTreeClassifier:
         criterion             = "gini", # entropy
         splitter              = "best", # random
         max_depth             = None,
-        min_samples_split     = 2,
-        min_samples_leaf      = 1,
+        min_samples_split     = 2,               # FIXME: not implemented  # split
+        min_samples_leaf      = 1,               # FIXME: not implemented  # split
         max_features          = None,
         random_state          = None,
-        max_leaf_nodes        = None,
-        min_impurity_decrease = 0.0,
-        class_weight          = None
+        max_leaf_nodes        = None,            # FIXME: not implemented  # split
+        min_impurity_decrease = 0.0,             # FIXME: not implemented  # split
+        class_weight          = None             # FIXME: not implemented  # misc probably
     ):
         self.criterion             = criterion
         self.splitter              = splitter
@@ -136,11 +136,28 @@ class DecisionTreeClassifier:
     def _best_split_params(self, X, y):
         _, n_features = X.shape
 
-        best_info_gain = -1
+        # self.max_feature cannot be float
+        if self.max_features == 'sqrt':
+            max_features = math.sqrt(n_features)
+        elif self.max_features == 'log2':
+            max_features = np.log2(n_features)
+        elif isinstance(self.max_features, int):
+            max_features = self.max_features
+        elif self.max_features is None:
+            max_features = n_features
+
+        size = np.random.randint(1, max_features + 1)  # random size between 1 and max_features
+        feature_indices = np.random.choice(X.shape[1], size=size, replace=False)
+
+        if self.splitter == 'random':
+            # Choose one index randomly but threshold is still the most optimal
+            feature_indices = [np.random.choice(feature_indices)]
+
+        best_info_gain = -np.inf
         best_threshold = None
         best_feature_inx = None
 
-        for feature_inx in range(n_features):
+        for feature_inx in feature_indices:
             feature_column = X[:, feature_inx]
             thresholds = np.unique(feature_column)
 
