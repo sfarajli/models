@@ -36,7 +36,7 @@ class BaseDecisionTree:
         self.random_state          = random_state
         self.max_leaf_nodes        = max_leaf_nodes
         self.min_impurity_decrease = min_impurity_decrease
-        self._root_node            = None
+        self.root_node            = None
         self._leaf_count           = 0
 
         if isinstance(self.random_state, int):
@@ -46,7 +46,7 @@ class BaseDecisionTree:
 
 
     def fit(self, X, y):
-        self._root_node = self._build_tree(X, y, 0)
+        self.root_node = self._build_tree(X, y, 0)
 
     def _build_tree(self, X, y, depth):
         node = Node()
@@ -146,7 +146,7 @@ class BaseDecisionTree:
         return best_feature_inx, best_threshold, best_info_gain
 
     def predict(self, X):
-        return [ self._predict(x, self._root_node) for x in X ]
+        return [ self._predict(x, self.root_node) for x in X ]
 
     def _predict(self, x, node):
         if node.isleaf():
