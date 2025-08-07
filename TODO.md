@@ -21,8 +21,9 @@
   - [x] KNeighborsClassifier
   - [ ] KNeighborsRegressor
 - [ ] Decision Trees
-  - [ ] Classifier
-  - [ ] Regressor
+  - [x] Classifier
+  - [x] Regressor
+  - [ ] Random Forest
 - [x] Support Vector Machines 
 
 ### Unsupervised Models (`clustering/`)
