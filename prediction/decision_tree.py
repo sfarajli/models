@@ -233,3 +233,15 @@ class DecisionTreeRegressor(BaseDecisionTree):
 
     def _getvalue(self, y):
         return np.mean(y)
+
+def print_tree(node, feature_names=None, indent=""):
+    if node.isleaf():
+        print(f"{indent}Predict: {node.label}")
+        return
+
+    feature_name = f"X[{node.feature}]" if feature_names is None else feature_names[node.feature]
+
+    print(f"{indent}if {feature_name} < {node.threshold:.4f}:")
+    print_tree(node.left, feature_names, indent + "  ")
+    print(f"{indent}else:")
+    print_tree(node.right, feature_names, indent + "  ")
