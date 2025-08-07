@@ -2,8 +2,6 @@ import math
 import numpy as np
 from collections import Counter
 
-# FIXME: model gives different accuracy scores each time
-
 class Node:
     def __init__(self, right=None, left=None, threshold=None, feature=None, label=None):
         self.right = right
@@ -100,7 +98,6 @@ class BaseDecisionTree:
 
         return info_gain
 
-
     def _split(self, X, y, feature_inx, threshold):
         feature_column = X[:, feature_inx]
         right_inxs = feature_column >= threshold
@@ -121,8 +118,11 @@ class BaseDecisionTree:
         elif self.max_features is None:
             max_features = n_features
 
-        size = self.random_state.randint(1, max_features + 1)  # random size between 1 and max_features
-        feature_indices = self.random_state.choice(X.shape[1], size=size, replace=False)
+        if max_features < n_features:
+            size = self.random_state.randint(1, max_features + 1)  # random size between 1 and max_features
+            feature_indices = self.random_state.choice(X.shape[1], size=size, replace=False)
+        else:
+            feature_indices = np.arange(X.shape[1])
 
         if self.splitter == 'random':
             # Choose one index randomly but threshold is still the most optimal
@@ -163,48 +163,6 @@ class BaseDecisionTree:
 
     def _getvalue(self, y):
         raise NotImplementedError("Use Classifier or Regressor")
-
-class DecisionTreeClassifier(BaseDecisionTree):
-    def __init__(self, criterion = "gini", class_weight = None, **kwargs):
-        self.criterion = criterion
-        self.class_weight = class_weight
-        super().__init__(**kwargs)
-
-    def _impurity(self, y):
-        if len(y) == 0:
-            return 0
-
-        if self.criterion == 'gini':
-            return self._gini_impurity(y)
-        elif self.criterion == 'entropy':
-            return self._entropy(y)
-
-    def _entropy(self, y):
-        all_samples = len(y)
-        entropy = 0
-
-        counts = Counter(y).values()
-
-        for count in counts:
-            probability = count / all_samples
-            if probability > 0:
-                entropy -= probability * np.log2(probability)
-
-        return entropy
-
-    def _getvalue(self, y):
-        return Counter(y).most_common(1)[0][0]
-
-    def _gini_impurity(self, y):
-        all_samples = len(y)
-        impurity = 1
-
-        counts = Counter(y).values()
-        for count in counts:
-            probability = count / all_samples
-            impurity -= probability**2
-
-        return impurity
 
 class DecisionTreeClassifier(BaseDecisionTree):
     def __init__(self, criterion = "gini", class_weight = None, **kwargs):
