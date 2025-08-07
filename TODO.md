@@ -20,11 +20,11 @@
 - [ ] K-Nearest Neighbors
   - [x] KNeighborsClassifier
   - [ ] KNeighborsRegressor
-- [ ] Decision Trees
+- [x] Decision Trees
   - [x] Classifier
   - [x] Regressor
-  - [ ] Random Forest Classifier
-  - [ ] Random Forest Regressor
+  - [x] Random Forest Classifier
+  - [x] Random Forest Regressor
 - [x] Support Vector Machines
   - [x] SVC (Support Vector Classifier)
   - [ ] SVR (Support Vector Regressor)
