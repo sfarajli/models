@@ -205,3 +205,73 @@ class DecisionTreeClassifier(BaseDecisionTree):
             impurity -= probability**2
 
         return impurity
+
+class DecisionTreeClassifier(BaseDecisionTree):
+    def __init__(self, criterion = "gini", class_weight = None, **kwargs):
+        self.criterion = criterion
+        self.class_weight = class_weight
+        super().__init__(**kwargs)
+
+    def _impurity(self, y):
+        if len(y) == 0:
+            return 0
+
+        if self.criterion == 'gini':
+            return self._gini_impurity(y)
+        elif self.criterion == 'entropy':
+            return self._entropy(y)
+
+    def _entropy(self, y):
+        all_samples = len(y)
+        entropy = 0
+
+        counts = Counter(y).values()
+
+        for count in counts:
+            probability = count / all_samples
+            if probability > 0:
+                entropy -= probability * np.log2(probability)
+
+        return entropy
+
+    def _getvalue(self, y):
+        return Counter(y).most_common(1)[0][0]
+
+    def _gini_impurity(self, y):
+        all_samples = len(y)
+        impurity = 1
+
+        counts = Counter(y).values()
+        for count in counts:
+            probability = count / all_samples
+            impurity -= probability**2
+
+        return impurity
+
+class DecisionTreeRegressor(BaseDecisionTree):
+    def __init__(self, criterion = "mse", class_weight = None, **kwargs):
+        self.criterion = criterion
+        self.class_weight = class_weight
+        super().__init__(**kwargs)
+
+    def _impurity(self, y):
+        if len(y) == 0:
+            return 0
+
+        if self.criterion == 'mse':
+            return self._mse(y)
+        if self.criterion == 'mae':
+            return self._mae(y)
+
+    def _mse(self, y):
+        average = np.mean(y)
+        mse = np.mean((y - average)**2)
+        return mse
+
+    def _mae(self, y):
+        median = np.median(y)
+        mae = np.mean(np.abs(y - median))
+        return mae
+
+    def _getvalue(self, y):
+        return np.mean(y)
