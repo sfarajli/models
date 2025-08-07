@@ -23,8 +23,15 @@
 - [ ] Decision Trees
   - [x] Classifier
   - [x] Regressor
-  - [ ] Random Forest
-- [x] Support Vector Machines 
+  - [ ] Random Forest Classifier
+  - [ ] Random Forest Regressor
+- [x] Support Vector Machines
+  - [x] SVC (Support Vector Classifier)
+  - [ ] SVR (Support Vector Regressor)
+- [ ] Naive Bayes
+  - [ ] GaussianNB
+  - [ ] MultinomialNB
+  - [ ] BernoulliNB
 
 ### Unsupervised Models (`clustering/`)
 - [ ] KMeans
