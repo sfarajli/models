@@ -25,9 +25,11 @@
   - [x] Regressor
   - [x] Random Forest Classifier
   - [x] Random Forest Regressor
-- [x] Support Vector Machines
-  - [x] SVC (Support Vector Classifier)
-  - [ ] SVR (Support Vector Regressor)
+- [ ] Support Vector Machines
+  - [ ] LinearSVC 
+  - [ ] LinearSVR 
+  - [ ] SVC 
+  - [ ] SVR 
 - [ ] Naive Bayes
   - [ ] GaussianNB
   - [ ] MultinomialNB
