@@ -26,8 +26,8 @@
   - [x] Random Forest Classifier
   - [x] Random Forest Regressor
 - [ ] Support Vector Machines
-  - [ ] LinearSVC 
-  - [ ] LinearSVR 
+  - [x] LinearSVC 
+  - [x] LinearSVR 
   - [ ] SVC 
   - [ ] SVR 
 - [ ] Naive Bayes
