@@ -67,11 +67,12 @@
 
 ## Evaluation Metrics (`metrics/`)
 
-- [ ] Classification metrics
-  - [ ] accuracy_score
-  - [ ] precision_score
-  - [ ] recall_score
-  - [ ] f1_score
+- [x] Classification metrics
+  - [x] accuracy_score
+  - [x] precision_score
+  - [x] recall_score
+  - [x] f1_score
+  - [x] confusion_matix
 - [ ] Regression metrics
   - [ ] mean_squared_error
   - [ ] mean_absolute_error
